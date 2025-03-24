@@ -24,6 +24,10 @@ const nextConfig = {
     disableWebAssembly: true,
     parallelServerCompiles: true,
   },
+  webpack: (config) => {
+    config.optimization.minimize = false; // Tắt minimize để giảm tải bộ nhớ
+    return config;
+  },
 }
 
 mergeConfig(nextConfig, userConfig)
