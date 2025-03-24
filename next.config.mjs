@@ -7,17 +7,20 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  swcMinify: false,
-  output: 'export',
-  eslint: { ignoreDuringBuilds: true },
-  typescript: { ignoreBuildErrors: true },
-  images: { unoptimized: true },
-  experimental: {
-    disableWebAssembly: true, // Tắt WebAssembly hoàn toàn
+  eslint: {
+    ignoreDuringBuilds: true,
   },
-  webpack: (config) => {
-    config.experiments = { asyncWebAssembly: false, syncWebAssembly: false }
-    return config
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  images: {
+    unoptimized: true,
+  },
+  experimental: {
+    webpackBuildWorker: true,
+    parallelServerBuildTraces: true,
+    parallelServerCompiles: true,
+    layers: true,
   },
 }
 
