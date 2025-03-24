@@ -8,25 +8,16 @@ try {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   swcMinify: false,
-  output: 'export', // Thay thế `next export`
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  images: {
-    unoptimized: true,
-  },
+  output: 'export',
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+  images: { unoptimized: true },
   experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    disableWebAssembly: true,
-    parallelServerCompiles: true,
+    disableWebAssembly: true, // Tắt WebAssembly hoàn toàn
   },
   webpack: (config) => {
-    config.optimization.minimize = false; // Tắt minimize để giảm tải bộ nhớ
-    return config;
+    config.experiments = { asyncWebAssembly: false, syncWebAssembly: false }
+    return config
   },
 }
 
