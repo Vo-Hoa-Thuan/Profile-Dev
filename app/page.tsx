@@ -32,7 +32,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030305] text-white selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-[#0c0c18] text-white selection:bg-indigo-500/30">
 
       {/* NAV */}
       <header className="fixed inset-x-0 top-0 z-50 flex justify-center pt-4 px-4">
@@ -44,7 +44,7 @@ export default function Home() {
           </a>
           <nav className="hidden md:flex items-center gap-5">
             {NAV_LINKS.map(l => (
-              <a key={l.href} href={l.href} className="text-sm text-white/45 hover:text-white transition-colors animated-underline">{l.label}</a>
+              <a key={l.href} href={l.href} className="text-sm text-white/60 hover:text-white transition-colors animated-underline">{l.label}</a>
             ))}
           </nav>
           <div className="flex items-center gap-2">
@@ -76,10 +76,10 @@ export default function Home() {
                     <span className="text-white">Vo Hoa</span><br />
                     <span className="gradient-text">Thuan</span>
                   </h1>
-                  <p className="mt-3 text-base md:text-lg text-white/35 font-mono">Full-Stack · Platform Engineering · AI Systems</p>
+                  <p className="mt-3 text-base md:text-lg text-white/55 font-mono">Full-Stack · Platform Engineering · AI Systems</p>
                 </motion.div>
 
-                <motion.p className="text-white/55 text-lg leading-relaxed max-w-md"
+                <motion.p className="text-white/80 text-xl leading-relaxed max-w-md"
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
                   I build production systems — backend APIs, AI-integrated services, and Linux infrastructure that handle real traffic and real users.
                 </motion.p>
@@ -136,7 +136,7 @@ export default function Home() {
             {STATS.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.08} className="text-center">
                 <div className="text-3xl font-bold gradient-text">{s.value}</div>
-                <div className="text-xs text-white/35 mt-1">{s.label}</div>
+                <div className="text-sm text-white/55 mt-1">{s.label}</div>
               </Reveal>
             ))}
           </div>
@@ -160,7 +160,7 @@ export default function Home() {
                         <e.icon className="h-5 w-5" style={{ color: e.color }} />
                       </div>
                       <h3 className="text-base font-semibold mb-2">{e.title}</h3>
-                      <p className="text-white/45 text-sm leading-relaxed mb-4">{e.desc}</p>
+                      <p className="text-white/75 text-base leading-relaxed mb-4">{e.desc}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {e.tags.map(t => (
                           <span key={t} className="text-[11px] font-mono px-2 py-0.5 rounded-md"
@@ -188,13 +188,13 @@ export default function Home() {
                   <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-indigo-500 ring-4 ring-indigo-500/20" />
                   <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-6">
                     <div className="flex flex-wrap gap-2 justify-between items-start mb-1">
-                      <h3 className="text-white font-semibold text-sm">System Administrator & Backend Developer</h3>
-                      <span className="text-[11px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">Jan 2026 – May 2026</span>
+                      <h3 className="text-white font-semibold text-base">System Administrator & Backend Developer</h3>
+                      <span className="text-xs font-mono text-white/50 bg-white/5 px-2 py-0.5 rounded">Jan 2026 – May 2026</span>
                     </div>
-                    <p className="text-indigo-400 text-xs mb-4">Sieu Toc Viet — Ho Chi Minh City</p>
+                    <p className="text-indigo-400 text-sm mb-4">Sieu Toc Viet — Ho Chi Minh City</p>
                     <ul className="space-y-2">
                       {EXPERIENCE_BULLETS.map((b, i) => (
-                        <li key={i} className="flex gap-2 text-xs text-white/50 leading-relaxed">
+                        <li key={i} className="flex gap-2 text-sm text-white/70 leading-relaxed">
                           <span className="mt-1 w-1 h-1 rounded-full bg-indigo-500 flex-shrink-0" />{b}
                         </li>
                       ))}
@@ -208,10 +208,10 @@ export default function Home() {
                   <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-cyan-500 ring-4 ring-cyan-500/20" />
                   <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-6">
                     <div className="flex flex-wrap gap-2 justify-between items-start mb-1">
-                      <h3 className="text-white font-semibold text-sm">Bachelor of Information Technology</h3>
-                      <span className="text-[11px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">2022 – 2026</span>
+                      <h3 className="text-white font-semibold text-base">Bachelor of Information Technology</h3>
+                      <span className="text-xs font-mono text-white/50 bg-white/5 px-2 py-0.5 rounded">2022 – 2026</span>
                     </div>
-                    <p className="text-cyan-400 text-xs mb-4">Academy of Cryptography Techniques (ACT)</p>
+                    <p className="text-cyan-400 text-sm mb-4">Academy of Cryptography Techniques (ACT)</p>
                     <ul className="space-y-2">
                       {["Major: Information Technology","Technical working proficiency in English","Focus on secure systems and backend engineering"].map((b,i)=>(
                         <li key={i} className="flex gap-2 text-xs text-white/50 leading-relaxed">
@@ -243,7 +243,7 @@ export default function Home() {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {g.skills.map(s => (
-                        <span key={s} className="text-xs font-mono px-2 py-1 rounded-md bg-white/[0.04] border border-white/[0.06] text-white/55 hover:text-white/80 transition-colors">{s}</span>
+                        <span key={s} className="text-sm font-mono px-2.5 py-1 rounded-md bg-white/[0.06] border border-white/[0.10] text-white/75 hover:text-white transition-colors">{s}</span>
                       ))}
                     </div>
                   </div>
@@ -280,11 +280,11 @@ export default function Home() {
                             {p.demo && <a href={p.demo} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white hover:border-white/20 transition-all"><ExternalLink className="h-3.5 w-3.5" /></a>}
                           </div>
                         </div>
-                        <p className="text-white/45 text-sm leading-relaxed my-4">{p.description}</p>
+                        <p className="text-white/78 text-base leading-relaxed my-4">{p.description}</p>
                         <ul className="space-y-1.5 mb-5">
                           {p.highlights.map((h, j) => (
-                            <li key={j} className="flex gap-2 text-xs text-white/50">
-                              <CheckCircle2 className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0 mt-0.5" />{h}
+                            <li key={j} className="flex gap-2 text-sm text-white/72">
+                              <CheckCircle2 className="h-4 w-4 text-indigo-400 flex-shrink-0 mt-0.5" />{h}
                             </li>
                           ))}
                         </ul>
@@ -306,7 +306,7 @@ export default function Home() {
             <Reveal className="text-center mb-12">
               <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-2">Get In Touch</p>
               <h2 className="text-3xl md:text-4xl font-bold mb-3">Let's Work Together</h2>
-              <p className="text-white/40 max-w-md mx-auto text-sm">Open to backend, full-stack, or platform engineering roles. Also happy to discuss freelance infrastructure projects.</p>
+              <p className="text-white/65 max-w-md mx-auto text-base">Open to backend, full-stack, or platform engineering roles. Also happy to discuss freelance infrastructure projects.</p>
             </Reveal>
             <div className="grid md:grid-cols-2 gap-10 max-w-3xl mx-auto">
               <Reveal delay={0.1} className="space-y-5">
@@ -321,9 +321,9 @@ export default function Home() {
                       <Icon className="h-4 w-4 text-indigo-400" />
                     </div>
                     <div>
-                      <p className="text-xs text-white/30">{label}</p>
-                      {href ? <a href={href} className="text-sm text-white/70 hover:text-white transition-colors">{value}</a>
-                        : <p className="text-sm text-white/70">{value}</p>}
+                      <p className="text-xs text-white/50">{label}</p>
+                      {href ? <a href={href} className="text-base text-white/85 hover:text-white transition-colors">{value}</a>
+                        : <p className="text-base text-white/85">{value}</p>}
                     </div>
                   </div>
                 ))}
