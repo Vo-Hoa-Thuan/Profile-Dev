@@ -1,834 +1,371 @@
 "use client"
-
 import type React from "react"
-
-import Image from "next/image"
-import {
-  Github,
-  Mail,
-  Linkedin,
-  ExternalLink,
-  Download,
-  Send,
-  MapPin,
-  Calendar,
-  Phone,
-  User,
-  Code,
-  Briefcase,
-  GraduationCap,
-  Heart,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { MobileMenu } from "@/components/mobile-menu"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { SectionTitle } from "@/components/section-title"
-import { SkillProgress } from "@/components/skill-progress"
-import { TimelineItem } from "@/components/timeline-item"
-import { motion } from "framer-motion"
 import { useRef, useState } from "react"
+import Image from "next/image"
+import { motion, useInView } from "framer-motion"
+import { Github, Mail, Linkedin, Download, ArrowRight, MapPin, Phone, Send, ExternalLink, CheckCircle2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { MobileMenu } from "@/components/mobile-menu"
+import HeroViz from "@/components/hero-viz"
+import { NAV_LINKS, STATS, EXPERTISE, SKILL_GROUPS, PROJECTS, EXPERIENCE_BULLETS } from "@/components/portfolio-data"
+
+function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const visible = useInView(ref, { once: true, margin: "-60px" })
+  return (
+    <motion.div ref={ref} className={className}
+      initial={{ opacity: 0, y: 20 }} animate={visible ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55, delay, ease: [0.21, 0.47, 0.32, 0.98] }}>
+      {children}
+    </motion.div>
+  )
+}
 
 export default function Home() {
-  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle")
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setFormStatus("submitting")
-
-    // Simulate form submission
-    setTimeout(() => {
-      setFormStatus("success")
-      if (formRef.current) formRef.current.reset()
-
-      // Reset status after 3 seconds
-      setTimeout(() => setFormStatus("idle"), 3000)
-    }, 1500)
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); setStatus("sending")
+    setTimeout(() => { setStatus("sent"); formRef.current?.reset(); setTimeout(() => setStatus("idle"), 4000) }, 1500)
   }
 
-  const projects = [
-    {
-      title: "ToeicLab VN – AI-Powered TOEIC Learning Platform",
-      description:
-        "A full-stack TOEIC learning platform split into two independently deployable services: a NestJS API owning all application state and a FastAPI service for AI inference. Features JWT authentication with HttpOnly cookies, relational schema managed via Prisma, and an AI explanation workflow powered by LLMs.",
-      image: "/placeholder.svg?height=400&width=600",
-      tags: ["NestJS", "FastAPI", "PostgreSQL", "Prisma", "Redis", "Docker", "TypeScript", "Python"],
-      demoUrl: "",
-      githubUrl: "https://github.com/Vo-Hoa-Thuan",
-      responsibilities: [
-        "Split the platform into two independently deployable services instead of one monolith: a NestJS API and a FastAPI AI inference service",
-        "Implemented JWT-based authentication with HttpOnly cookies to reduce exposure to XSS-based token theft",
-        "Designed the relational schema in PostgreSQL using Prisma, modeling users, TOEIC question sets, and attempt/answer history",
-        "Built the AI explanation pipeline so users receive per-question LLM-generated explanations after answering",
-        "Containerized all services with Docker Compose for one-command local setup with environment-based config",
-      ],
-    },
-    {
-      title: "Postfix Outbound Relay – Mail Infrastructure & DevOps",
-      description:
-        "A self-hosted outbound SMTP relay for transactional email. Application services authenticate to the relay which is locked down to only allow known authenticated services, reducing open-relay and spam risks. Containerized with Docker for repeatable deployment.",
-      image: "/placeholder.svg?height=400&width=600",
-      tags: ["Linux", "Docker", "Postfix", "SMTP", "SPF", "DKIM", "DMARC"],
-      demoUrl: "",
-      githubUrl: "https://github.com/Vo-Hoa-Thuan",
-      responsibilities: [
-        "Built a self-hosted outbound SMTP relay where only authenticated, known services can submit mail",
-        "Configured SPF (authorized sending IPs), DKIM (cryptographic message signing), and DMARC policy on the sending domain",
-        "Containerized the relay with Docker for repeatable, version-controlled deployment without manual reconfiguration",
-      ],
-    },
-    {
-      title: "HCM_METRO – Metro Management & Tracking Platform",
-      description:
-        "A full-stack metro management platform built with React.js and Node.js/Express.js, handling route management, tracking simulation, and user authentication via Google OAuth and OTP. Modeled routes, stations, and tracking data in MongoDB with targeted indexing strategies.",
-      image: "/metrohcm.png?height=400&width=600",
-      tags: ["React.js", "Node.js", "Express.js", "MongoDB", "TypeScript", "Docker"],
-      demoUrl: "",
-      githubUrl: "https://github.com/Vo-Hoa-Thuan/HCM_METRO",
-      responsibilities: [
-        "Built the Node.js/Express.js backend handling route management and tracking simulation via REST endpoints",
-        "Modeled routes, stations, and tracking data as MongoDB collections with targeted indexes for main read patterns",
-        "Implemented Google OAuth for sign-in and OTP-based verification for new sign-ups",
-        "Containerized with Docker for consistent local development and setup across environments",
-      ],
-    },
-  ]
-
-  const backendSkills = [
-    { name: "Node.js & NestJS", level: 92 },
-    { name: "FastAPI & Python", level: 82 },
-    { name: "RESTful API Design", level: 93 },
-    { name: "PostgreSQL & Prisma ORM", level: 88 },
-    { name: "MongoDB & Redis", level: 85 },
-    { name: "JWT & OAuth2 Auth", level: 88 },
-  ]
-
-  const frontendSkills = [
-    { name: "React.js & Next.js", level: 88 },
-    { name: "TypeScript & JavaScript", level: 92 },
-    { name: "Tailwind CSS", level: 87 },
-    { name: "Zustand & TanStack Query", level: 80 },
-    { name: "Responsive UI Development", level: 88 },
-    { name: "PHP", level: 78 },
-  ]
-
-  const otherSkills = [
-    "Docker & Docker Compose",
-    "Linux (Ubuntu/CentOS)",
-    "Nginx Reverse Proxy",
-    "GitHub Actions",
-    "AI APIs (OpenAI, Gemini, Claude)",
-    "Postfix / SMTP / Mail Security",
-    "Shell Scripting",
-    "Prompt Engineering",
-  ]
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 caret-transparent">
-      <header className="sticky top-0 z-10 backdrop-blur-sm bg-background/80 border-b caret-transparent">
-        <div className="container flex items-center justify-between h-24">
-          <motion.h1
-            className="text-3xl font-bold"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            
-            <a href="/">
-              <span className="text-primary">Vo</span>HoaThuan
-            </a>
-          </motion.h1>
-          <motion.nav
-            className="hidden md:flex items-center gap-6"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <a href="#about" className="text-2sm font-medium hover:text-primary transition-colors relative group">
-              About Me
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-            </a>
-            <a href="#experience" className="text-2sm font-medium hover:text-primary transition-colors relative group">
-              Experience
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-            </a>
-            <a href="#skills" className="text-2sm font-medium hover:text-primary transition-colors relative group">
-              Skills
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-            </a>
-            <a href="#projects" className="text-2sm font-medium hover:text-primary transition-colors relative group">
-              Projects
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-            </a>
-            <a href="#contact" className="text-2sm font-medium hover:text-primary transition-colors relative group">
-              Contact
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          </motion.nav>
+    <div className="min-h-screen bg-[#030305] text-white selection:bg-indigo-500/30">
+
+      {/* NAV */}
+      <header className="fixed inset-x-0 top-0 z-50 flex justify-center pt-4 px-4">
+        <motion.div className="w-full max-w-5xl flex items-center justify-between rounded-2xl border border-white/[0.07] bg-white/[0.03] px-5 py-3 backdrop-blur-xl"
+          initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <a href="/" className="text-base font-bold">
+            <span className="gradient-text">VHT</span>
+            <span className="text-white/30 text-xs font-mono ml-2">v2026</span>
+          </a>
+          <nav className="hidden md:flex items-center gap-5">
+            {NAV_LINKS.map(l => (
+              <a key={l.href} href={l.href} className="text-sm text-white/45 hover:text-white transition-colors animated-underline">{l.label}</a>
+            ))}
+          </nav>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <MobileMenu />
+            <a href="/VoHoaThuan_FullStack_Engineer_CV.pdf" download
+              className="hidden sm:flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 transition-all font-medium">
+              <Download className="h-3 w-3" /> Resume
+            </a>
+            <ThemeToggle /><MobileMenu />
           </div>
-        </div>
+        </motion.div>
       </header>
 
       <main>
-        {/* Hero Section */}
-        <section id="about" className="container py-12 md:py-24 lg:py-32">
-          <div className="grid gap-8 md:grid-cols-2 items-center">
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-            >
-              <div className="caret transparent inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-4sm font-medium mb-2">
-                Full Stack · Platform Engineering · AI-Integrated Systems
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                Hi, I'm <span className="text-primary">Vo Hoa Thuan</span>
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                Full-Stack Engineer building modern web applications, backend services, and Linux-based infrastructure with AI integration.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button asChild>
-                  <a href="#contact">
-                    <Mail className="mr-2 h-4 w-4" /> Contact Me
-                  </a>
-                </Button>
-                <Button variant="outline" asChild>
-                  <a href="/VoHoaThuan_FullStack_Engineer_CV.pdf" download>
-                    <Download className="mr-2 h-4 w-4" /> Download CV
-                  </a>
-                </Button>
-              </div>
-              <div className="flex gap-4">
-                <motion.a
-                  href="https://github.com/Vo-Hoa-Thuan"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Github className="h-10 w-10" />
-                </motion.a>
-                <motion.a
-                  href="https://www.linkedin.com/in/thuan-dev2004/"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Linkedin className="h-10 w-10" />
-                </motion.a>
-                <motion.a
-                  href="mailto:vohoathuan.devt@gmail.com"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Mail className="h-10 w-10" />
-                </motion.a>
-              </div>
-            </motion.div>
-            <motion.div
-              className="relative aspect-square max-w-md mx-auto"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-            >
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 blur-3xl opacity-50 animate-pulse"></div>
-              <div className="relative h-full w-full overflow-hidden rounded-full border-4 border-primary/20 shadow-xl">
-                <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="Vo Hoa Thuan"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            </motion.div>
-          </div>
-        </section>
+        {/* HERO */}
+        <section id="about" className="relative min-h-screen flex items-center overflow-hidden">
+          <div className="absolute inset-0 grid-bg opacity-50" />
+          <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-violet-600/8 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Objective Section */}
-        <section className="bg-muted/30 py-12 md:py-16">
-          <div className="container">
-            <SectionTitle title="Career Objective" subtitle="My professional goals and aspirations" />
-            <motion.div
-              className="max-w-3xl mx-auto bg-card p-8 rounded-lg shadow-md border border-border/50"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <div className="space-y-4 text-muted-foreground">
-                <p>
-                  Full-Stack Engineer with hands-on experience building modern web applications, backend services, and{" "}
-                  <span className="text-primary font-medium">
-                    Linux-based infrastructure.
-                  </span>{" "}
-                  Developed AI-integrated systems using OpenAI, Gemini, and Claude APIs while designing scalable backend
-                  architectures with Node.js, NestJS, FastAPI, PostgreSQL, and Docker.
-                </p>
-                <p>
-                  Experienced across the full software lifecycle, from React frontend development and API design to
-                  deployment-ready environments, server administration, mail infrastructure, and production incident response.
-                </p>
-                <p>
-                  Interested in building reliable software platforms that combine strong engineering fundamentals with
-                  practical AI capabilities.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Personal Info */}
-        <section className="py-12 md:py-16">
-          <div className="container">
-            <SectionTitle
-              title="Personal Information"
-              subtitle="Get to know me better with these key details about my background and contact information."
-            />
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <motion.div
-                className="bg-card rounded-lg p-6 shadow-md border border-border/50 hover:border-primary/50 transition-colors duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <User className="h-5 w-5 text-primary" />
+          <div className="relative mx-auto max-w-5xl w-full px-4 sm:px-6 pt-28 pb-16">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-7">
+                <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/8 mb-5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                    <span className="text-xs font-mono text-indigo-300">Open to opportunities</span>
                   </div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Full Name</h3>
-                </div>
-                <p className="text-xl font-semibold break-all">Vo Hoa Thuan</p>
-              </motion.div>
-              <motion.div
-                className="bg-card rounded-lg p-6 shadow-md border border-border/50 hover:border-primary/50 transition-colors duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Calendar className="h-5 w-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Date of Birth</h3>
-                </div>
-                <p className="text-xl font-semibold break-all">August 3, 2004</p>
-              </motion.div>
-              <motion.div
-                className="bg-card rounded-lg p-6 shadow-md border border-border/50 hover:border-primary/50 transition-colors duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Phone className="h-5 w-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Phone</h3>
-                </div>
-                <p className="text-xl font-semibold break-all">(+84) 867 962 672</p>
-              </motion.div>
-              <motion.div
-                className="bg-card rounded-lg p-6 shadow-md border border-border/50 hover:border-primary/50 transition-colors duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Mail className="h-5 w-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Email</h3>
-                </div>
-                <p className="text-xl font-semibold break-all">vohoathuan.devt@gmail.com</p>
-              </motion.div>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2 mt-6">
-              <motion.div
-                className="bg-card rounded-lg p-6 shadow-md border border-border/50 hover:border-primary/50 transition-colors duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <MapPin className="h-5 w-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Location</h3>
-                </div>
-                <p className="text-xl font-semibold">
-                  Ho Chi Minh City, Vietnam
-                </p>
-              </motion.div>
-              <motion.div
-                className="bg-card rounded-lg p-6 shadow-md border border-border/50 hover:border-primary/50 transition-colors duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Heart className="h-5 w-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Interests</h3>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">AI & Software Engineering</span>
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Linux & Platform Infrastructure</span>
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Football & Badminton</span>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Education & Experience */}
-        <section id="experience" className="bg-muted/30 py-12 md:py-24">
-          <div className="container">
-            <div className="grid gap-12 md:grid-cols-2">
-              {/* Education */}
-              <div>
-                <SectionTitle title="Education" subtitle="My academic background and qualifications" className="mb-8" />
-                <div className="space-y-6">
-                  <TimelineItem
-                    title="Academy of Cryptography Techniques (ACT)"
-                    date="2022 - 2026 (Expected)"
-                    description={
-                      <div className="space-y-2">
-                        <p>Majoring in Information Technology</p>
-                        <p>Technical working proficiency in English</p>
-                        <div className="mt-4 flex items-center">
-                          <GraduationCap className="h-5 w-5 text-primary mr-2" />
-                          <span className="font-medium">Bachelor of Information Technology</span>
-                        </div>
-                      </div>
-                    }
-                    index={0}
-                  />
-                </div>
-              </div>
-
-              {/* Work Experience */}
-              <div>
-                <SectionTitle
-                  title="Work Experience"
-                  subtitle="My professional journey and projects"
-                  className="mb-8"
-                />
-                <div className="space-y-6">
-                  <TimelineItem
-                    title="System Administrator & Backend Developer"
-                    date="Jan 2026 - May 2026"
-                    description={
-                      <div className="space-y-2">
-                        <p className="font-medium text-primary">Sieu Toc Viet — Ho Chi Minh City, Vietnam</p>
-                        <ul className="list-disc pl-5 space-y-1 mt-2">
-                          <li>Designed and built 10+ Node.js and Python AI automation services integrating OpenAI, Gemini, and Claude APIs</li>
-                          <li>Managed Linux production servers (DirectAdmin + Docker), handling monitoring, patching, and operational support</li>
-                          <li>Investigated and remediated malware-related incidents via process analysis, log review, and system hardening</li>
-                          <li>Operated Postfix relay infrastructure, configured SPF/DKIM/DMARC, and resolved SMTP delivery issues</li>
-                          <li>Built internal automation scripts to streamline data processing and content publishing workflows</li>
-                        </ul>
-                        <div className="mt-4 flex items-center">
-                          <Briefcase className="h-5 w-5 text-primary mr-2" />
-                          <span className="font-medium">Full-time Employment</span>
-                        </div>
-                      </div>
-                    }
-                    index={0}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Skills Section */}
-        <section id="skills" className="container py-12 md:py-24">
-          <SectionTitle
-            title="Technical Skills"
-            subtitle="The technologies, tools, and methodologies I've mastered throughout my career."
-          />
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
-            <motion.div
-              className="bg-card rounded-lg p-6 shadow-md border border-border/50"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-primary/10 p-3 rounded-full">
-                  <Code className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Backend Development</h3>
-              </div>
-              <div className="space-y-4">
-                {backendSkills.map((skill, index) => (
-                  <SkillProgress key={index} name={skill.name} level={skill.level} index={index} />
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="bg-card rounded-lg p-6 shadow-md border border-border/50"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-primary/10 p-3 rounded-full">
-                  <Code className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Frontend Development</h3>
-              </div>
-              <div className="space-y-4">
-                {frontendSkills.map((skill, index) => (
-                  <SkillProgress key={index} name={skill.name} level={skill.level} index={index} />
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="bg-card rounded-lg p-6 shadow-md border border-border/50"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-primary/10 p-3 rounded-full">
-                  <Code className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Other Skills</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {otherSkills.map((skill, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex items-center gap-2 p-3 rounded-md bg-muted/50"
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="h-2 w-2 rounded-full bg-primary"></div>
-                    <span>{skill}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects" className="bg-muted/30 py-12 md:py-24">
-          <div className="container">
-            <SectionTitle
-              title="Featured Projects"
-              subtitle="A showcase of my work, featuring web applications and software solutions I've developed."
-            />
-            <div className="space-y-16">
-              {projects.map((project, index) => (
-                <motion.div
-                  key={index}
-                  className="grid md:grid-cols-2 gap-8 items-center"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <div className={`${index % 2 === 1 ? "md:order-2" : ""}`}>
-                    <div className="aspect-video bg-muted relative overflow-hidden rounded-lg shadow-lg border border-border/50 group">
-                      <Image
-                        src={project.image || "/placeholder.svg"}
-                        alt={project.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                        {project.demoUrl && (
-                          <Button size="sm" variant="secondary" asChild>
-                            <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="mr-2 h-4 w-4" />
-                              Live Demo
-                            </a>
-                          </Button>
-                        )}
-                        {project.githubUrl && (
-                          <Button size="sm" variant="outline" asChild>
-                            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                              <Github className="mr-2 h-4 w-4" />
-                              Code
-                            </a>
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
-                    <p className="text-muted-foreground mb-4">{project.description}</p>
-                    <div className="mb-4">
-                      <h4 className="font-semibold mb-2">Key Responsibilities:</h4>
-                      <ul className="space-y-1 text-sm text-muted-foreground">
-                        {project.responsibilities.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <div className="h-2 w-2 rounded-full bg-primary mt-1.5"></div>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.map((tag, i) => (
-                        <span key={i} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex gap-3">
-                      {project.demoUrl && (
-                        <Button size="sm" variant="default" asChild>
-                          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="mr-2 h-4 w-4" />
-                            Live Demo
-                          </a>
-                        </Button>
-                      )}
-                      {project.githubUrl && (
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                            <Github className="mr-2 h-4 w-4" />
-                            View Code
-                          </a>
-                        </Button>
-                      )}
-                    </div>
-                  </div>
+                  <h1 className="text-5xl md:text-6xl lg:text-[4.2rem] font-bold leading-[1.05] tracking-tight">
+                    <span className="text-white">Vo Hoa</span><br />
+                    <span className="gradient-text">Thuan</span>
+                  </h1>
+                  <p className="mt-3 text-base md:text-lg text-white/35 font-mono">Full-Stack · Platform Engineering · AI Systems</p>
                 </motion.div>
+
+                <motion.p className="text-white/55 text-lg leading-relaxed max-w-md"
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
+                  I build production systems — backend APIs, AI-integrated services, and Linux infrastructure that handle real traffic and real users.
+                </motion.p>
+
+                <motion.div className="flex flex-wrap gap-3"
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45 }}>
+                  <a href="#contact">
+                    <Button className="gap-2 bg-indigo-600 hover:bg-indigo-500 text-white border-0 px-5 h-10 rounded-xl text-sm font-medium">
+                      <Mail className="h-3.5 w-3.5" /> Get In Touch
+                    </Button>
+                  </a>
+                  <a href="#projects">
+                    <Button variant="outline" className="gap-2 border-white/10 bg-white/5 hover:bg-white/10 text-white px-5 h-10 rounded-xl text-sm font-medium">
+                      View Work <ArrowRight className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                </motion.div>
+
+                <motion.div className="flex items-center gap-4 pt-1"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+                  {[
+                    { href: "https://github.com/Vo-Hoa-Thuan", Icon: Github, label: "GitHub" },
+                    { href: "https://www.linkedin.com/in/thuan-dev2004/", Icon: Linkedin, label: "LinkedIn" },
+                    { href: "mailto:vohoathuan.devt@gmail.com", Icon: Mail, label: "Email" },
+                  ].map(({ href, Icon, label }) => (
+                    <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-white/30 hover:text-white/70 transition-colors text-sm">
+                      <Icon className="h-4 w-4" /><span className="hidden sm:inline">{label}</span>
+                    </a>
+                  ))}
+                  <span className="text-white/15 mx-1">·</span>
+                  <span className="text-sm text-white/30 flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> HCMC, Vietnam</span>
+                </motion.div>
+              </div>
+
+              <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.35 }}>
+                <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3 backdrop-blur-sm">
+                  <div className="flex items-center justify-between px-2 pb-2">
+                    <span className="text-[10px] font-mono text-white/20">system.topology</span>
+                    <div className="flex gap-1.5">
+                      {["#ff5f57","#febc2e","#28c840"].map(c => <div key={c} className="w-2.5 h-2.5 rounded-full opacity-70" style={{ background: c }} />)}
+                    </div>
+                  </div>
+                  <HeroViz />
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* STATS */}
+        <section className="border-y border-white/[0.05] bg-white/[0.015]">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+            {STATS.map((s, i) => (
+              <Reveal key={s.label} delay={i * 0.08} className="text-center">
+                <div className="text-3xl font-bold gradient-text">{s.value}</div>
+                <div className="text-xs text-white/35 mt-1">{s.label}</div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* EXPERTISE */}
+        <section className="section-padding">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <Reveal className="mb-12">
+              <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-2">Core Competencies</p>
+              <h2 className="text-3xl md:text-4xl font-bold">What I Build</h2>
+            </Reveal>
+            <div className="grid md:grid-cols-3 gap-5">
+              {EXPERTISE.map((e, i) => (
+                <Reveal key={e.title} delay={i * 0.1}>
+                  <div className="group relative h-full rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 hover:border-white/[0.12] transition-all duration-300 hover-lift overflow-hidden">
+                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ background: `radial-gradient(ellipse at top left, ${e.color}10 0%, transparent 65%)` }} />
+                    <div className="relative">
+                      <div className="inline-flex p-2.5 rounded-xl mb-4" style={{ background: `${e.color}15`, border: `1px solid ${e.color}25` }}>
+                        <e.icon className="h-5 w-5" style={{ color: e.color }} />
+                      </div>
+                      <h3 className="text-base font-semibold mb-2">{e.title}</h3>
+                      <p className="text-white/45 text-sm leading-relaxed mb-4">{e.desc}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {e.tags.map(t => (
+                          <span key={t} className="text-[11px] font-mono px-2 py-0.5 rounded-md"
+                            style={{ background: `${e.color}12`, border: `1px solid ${e.color}25`, color: e.color }}>{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section id="contact" className="py-12 md:py-24">
-          <div className="container">
-            <SectionTitle
-              title="Get In Touch"
-              subtitle="Have a project in mind or want to discuss potential opportunities? Feel free to reach out!"
-            />
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <motion.div
-                className="space-y-6"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <h3 className="text-2xl font-bold">Contact Information</h3>
-                <p className="text-muted-foreground">
-                  Feel free to reach out to me through any of these channels. I'm always open to discussing new
-                  projects, creative ideas, or opportunities to be part of your vision.
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <Mail className="h-5 w-5 text-primary" />
+        {/* EXPERIENCE */}
+        <section id="experience" className="section-padding border-t border-white/[0.05]">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <Reveal className="mb-12">
+              <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-2">Work History</p>
+              <h2 className="text-3xl md:text-4xl font-bold">Experience</h2>
+            </Reveal>
+            <div className="grid md:grid-cols-2 gap-12">
+              <Reveal delay={0.1}>
+                <div className="pl-5 border-l border-white/[0.08] relative">
+                  <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-indigo-500 ring-4 ring-indigo-500/20" />
+                  <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-6">
+                    <div className="flex flex-wrap gap-2 justify-between items-start mb-1">
+                      <h3 className="text-white font-semibold text-sm">System Administrator & Backend Developer</h3>
+                      <span className="text-[11px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">Jan 2026 – May 2026</span>
                     </div>
-                    <div>
-                      <h4 className="font-medium">Email</h4>
-                      <p className="text-muted-foreground">vohoathuan.devt@gmail.com</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <Phone className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Phone</h4>
-                      <p className="text-muted-foreground">(+84) 867 962 672</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <Github className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">GitHub</h4>
-                      <p className="text-muted-foreground">github.com/Vo-Hoa-Thuan</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <MapPin className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Location</h4>
-                      <p className="text-muted-foreground">Ho Chi Minh City, Vietnam</p>
-                    </div>
+                    <p className="text-indigo-400 text-xs mb-4">Sieu Toc Viet — Ho Chi Minh City</p>
+                    <ul className="space-y-2">
+                      {EXPERIENCE_BULLETS.map((b, i) => (
+                        <li key={i} className="flex gap-2 text-xs text-white/50 leading-relaxed">
+                          <span className="mt-1 w-1 h-1 rounded-full bg-indigo-500 flex-shrink-0" />{b}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-              </motion.div>
-              <motion.div
-                className="bg-card p-6 rounded-lg shadow-md border border-border/50"
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid gap-4">
-                    <div className="space-y-2">
-                      <label htmlFor="name" className="text-sm font-medium">
-                        Name
-                      </label>
-                      <input
-                        id="name"
-                        className="w-full px-3 py-2 border rounded-md text-sm bg-background"
-                        placeholder="Your name"
-                        required
-                      />
+              </Reveal>
+
+              <Reveal delay={0.2}>
+                <div className="pl-5 border-l border-white/[0.08] relative">
+                  <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-cyan-500 ring-4 ring-cyan-500/20" />
+                  <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-6">
+                    <div className="flex flex-wrap gap-2 justify-between items-start mb-1">
+                      <h3 className="text-white font-semibold text-sm">Bachelor of Information Technology</h3>
+                      <span className="text-[11px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">2022 – 2026</span>
                     </div>
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="text-sm font-medium">
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        className="w-full px-3 py-2 border rounded-md text-sm bg-background"
-                        placeholder="Your email"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="text-sm font-medium">
-                        Message
-                      </label>
-                      <textarea
-                        id="message"
-                        className="w-full px-3 py-2 border rounded-md text-sm min-h-[120px] bg-background"
-                        placeholder="Your message"
-                        required
-                      ></textarea>
-                    </div>
+                    <p className="text-cyan-400 text-xs mb-4">Academy of Cryptography Techniques (ACT)</p>
+                    <ul className="space-y-2">
+                      {["Major: Information Technology","Technical working proficiency in English","Focus on secure systems and backend engineering"].map((b,i)=>(
+                        <li key={i} className="flex gap-2 text-xs text-white/50 leading-relaxed">
+                          <span className="mt-1 w-1 h-1 rounded-full bg-cyan-500 flex-shrink-0" />{b}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <Button className="w-full" type="submit" disabled={formStatus === "submitting"}>
-                    {formStatus === "submitting" ? (
-                      <>Sending...</>
-                    ) : formStatus === "success" ? (
-                      <>Message Sent!</>
-                    ) : (
-                      <>
-                        <Send className="mr-2 h-4 w-4" /> Send Message
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </motion.div>
+                </div>
+              </Reveal>
             </div>
           </div>
         </section>
-        
-      </main>
 
-      <footer className="bg-background py-8 border-t">
-        <div className="container">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <h3 className="text-lg font-bold mb-4">
-                <span className="text-primary">Vo</span>HoaThuan
-              </h3>
-              <p className="text-muted-foreground">
-                Full Stack Developer passionate about creating elegant solutions to complex problems.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
-                    About Me
-                  </a>
-                </li>
-                <li>
-                  <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">
-                    Experience
-                  </a>
-                </li>
-                <li>
-                  <a href="#skills" className="text-muted-foreground hover:text-primary transition-colors">
-                    Skills
-                  </a>
-                </li>
-                <li>
-                  <a href="#projects" className="text-muted-foreground hover:text-primary transition-colors">
-                    Projects
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4">Contact</h3>
-              <ul className="space-y-2">
-                <li className="text-muted-foreground">Email: vohoathuan.devt@gmail.com</li>
-                <li className="text-muted-foreground">Phone: (+84) 867 962 672</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4">Follow Me</h3>
-              <div className="flex gap-4">
-                <a
-                  href="https://github.com/Vo-Hoa-Thuan"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Github className="h-5 w-5" />
-                </a>
-                <a href="https://www.linkedin.com/in/thuan-dev2004/" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-                <a
-                  href="mailto:vohoathuan.devt@gmail.com"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Mail className="h-5 w-5" />
-                </a>
-              </div>
+        {/* SKILLS */}
+        <section id="skills" className="section-padding border-t border-white/[0.05]">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <Reveal className="mb-12">
+              <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-2">Technical Arsenal</p>
+              <h2 className="text-3xl md:text-4xl font-bold">Skills</h2>
+            </Reveal>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {SKILL_GROUPS.map((g, i) => (
+                <Reveal key={g.category} delay={i * 0.08}>
+                  <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-5 h-full">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: g.color }} />
+                      <h3 className="text-sm font-semibold text-white/80">{g.category}</h3>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {g.skills.map(s => (
+                        <span key={s} className="text-xs font-mono px-2 py-1 rounded-md bg-white/[0.04] border border-white/[0.06] text-white/55 hover:text-white/80 transition-colors">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t text-center">
-            <p className="text-muted-foreground text-sm">
-              © {new Date().getFullYear()} Vo Hoa Thuan. All rights reserved.
-            </p>
+        </section>
+
+        {/* PROJECTS */}
+        <section id="projects" className="section-padding border-t border-white/[0.05]">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <Reveal className="mb-12">
+              <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-2">Case Studies</p>
+              <h2 className="text-3xl md:text-4xl font-bold">Featured Projects</h2>
+            </Reveal>
+            <div className="space-y-8">
+              {PROJECTS.map((p, i) => (
+                <Reveal key={p.title} delay={i * 0.1}>
+                  <div className="group rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden hover:border-white/[0.12] transition-all duration-300 hover-lift">
+                    <div className="grid md:grid-cols-5">
+                      <div className="md:col-span-2 relative overflow-hidden bg-white/[0.03]">
+                        <Image src={p.image} alt={p.title} width={700} height={400} className="w-full h-48 md:h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-500 group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#030305] hidden md:block" />
+                      </div>
+                      <div className="md:col-span-3 p-7">
+                        <div className="flex items-start justify-between gap-4 mb-1">
+                          <div>
+                            <h3 className="text-lg font-bold text-white">{p.title}</h3>
+                            <p className="text-indigo-400 text-xs font-mono">{p.subtitle}</p>
+                          </div>
+                          <div className="flex gap-2 flex-shrink-0">
+                            {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white hover:border-white/20 transition-all"><Github className="h-3.5 w-3.5" /></a>}
+                            {p.demo && <a href={p.demo} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white hover:border-white/20 transition-all"><ExternalLink className="h-3.5 w-3.5" /></a>}
+                          </div>
+                        </div>
+                        <p className="text-white/45 text-sm leading-relaxed my-4">{p.description}</p>
+                        <ul className="space-y-1.5 mb-5">
+                          {p.highlights.map((h, j) => (
+                            <li key={j} className="flex gap-2 text-xs text-white/50">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0 mt-0.5" />{h}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="flex flex-wrap gap-1.5">
+                          {p.tags.map(t => <span key={t} className="tech-tag">{t}</span>)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CONTACT */}
+        <section id="contact" className="section-padding border-t border-white/[0.05]">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <Reveal className="text-center mb-12">
+              <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-2">Get In Touch</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">Let's Work Together</h2>
+              <p className="text-white/40 max-w-md mx-auto text-sm">Open to backend, full-stack, or platform engineering roles. Also happy to discuss freelance infrastructure projects.</p>
+            </Reveal>
+            <div className="grid md:grid-cols-2 gap-10 max-w-3xl mx-auto">
+              <Reveal delay={0.1} className="space-y-5">
+                {[
+                  { icon: Mail, label: "Email", value: "vohoathuan.devt@gmail.com", href: "mailto:vohoathuan.devt@gmail.com" },
+                  { icon: Phone, label: "Phone", value: "(+84) 867 962 672", href: "tel:+84867962672" },
+                  { icon: Github, label: "GitHub", value: "github.com/Vo-Hoa-Thuan", href: "https://github.com/Vo-Hoa-Thuan" },
+                  { icon: MapPin, label: "Location", value: "Ho Chi Minh City, Vietnam", href: null },
+                ].map(({ icon: Icon, label, value, href }) => (
+                  <div key={label} className="flex items-center gap-4">
+                    <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                      <Icon className="h-4 w-4 text-indigo-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/30">{label}</p>
+                      {href ? <a href={href} className="text-sm text-white/70 hover:text-white transition-colors">{value}</a>
+                        : <p className="text-sm text-white/70">{value}</p>}
+                    </div>
+                  </div>
+                ))}
+              </Reveal>
+
+              <Reveal delay={0.2}>
+                <form ref={formRef} onSubmit={onSubmit} className="space-y-3">
+                  {[
+                    { id: "name", type: "text", placeholder: "Your name" },
+                    { id: "email", type: "email", placeholder: "your@email.com" },
+                  ].map(f => (
+                    <input key={f.id} id={f.id} type={f.type} placeholder={f.placeholder} required
+                      className="w-full px-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-indigo-500/50 transition-colors" />
+                  ))}
+                  <textarea id="message" placeholder="Your message..." required rows={4}
+                    className="w-full px-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-indigo-500/50 transition-colors resize-none" />
+                  <Button type="submit" disabled={status === "sending"} className="w-full gap-2 bg-indigo-600 hover:bg-indigo-500 text-white h-10 rounded-xl text-sm font-medium">
+                    {status === "sending" ? "Sending..." : status === "sent" ? "Message Sent ✓" : <><Send className="h-3.5 w-3.5" /> Send Message</>}
+                  </Button>
+                </form>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/[0.05] py-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-sm font-bold"><span className="gradient-text">VHT</span><span className="text-white/20 font-normal text-xs ml-1.5">© {new Date().getFullYear()}</span></span>
+          <p className="text-xs text-white/25">Full-Stack · Platform Engineering · AI Systems</p>
+          <div className="flex gap-4">
+            {[
+              { href: "https://github.com/Vo-Hoa-Thuan", Icon: Github },
+              { href: "https://www.linkedin.com/in/thuan-dev2004/", Icon: Linkedin },
+              { href: "mailto:vohoathuan.devt@gmail.com", Icon: Mail },
+            ].map(({ href, Icon }) => (
+              <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="text-white/25 hover:text-white/70 transition-colors"><Icon className="h-4 w-4" /></a>
+            ))}
           </div>
         </div>
       </footer>
     </div>
   )
 }
-
