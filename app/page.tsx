@@ -48,84 +48,79 @@ export default function Home() {
 
   const projects = [
     {
-      title: "HCM_METRO – Metro Management System",
+      title: "ToeicLab VN – AI-Powered TOEIC Learning Platform",
       description:
-        "A full-stack metro management platform designed to provide real-time metro tracking, route optimization, and online ticketing. Built with React.js, Node.js, and MongoDB following the MVC architecture, with Docker for containerized deployment.",
+        "A full-stack TOEIC learning platform split into two independently deployable services: a NestJS API owning all application state and a FastAPI service for AI inference. Features JWT authentication with HttpOnly cookies, relational schema managed via Prisma, and an AI explanation workflow powered by LLMs.",
+      image: "/placeholder.svg?height=400&width=600",
+      tags: ["NestJS", "FastAPI", "PostgreSQL", "Prisma", "Redis", "Docker", "TypeScript", "Python"],
+      demoUrl: "",
+      githubUrl: "https://github.com/Vo-Hoa-Thuan",
+      responsibilities: [
+        "Split the platform into two independently deployable services instead of one monolith: a NestJS API and a FastAPI AI inference service",
+        "Implemented JWT-based authentication with HttpOnly cookies to reduce exposure to XSS-based token theft",
+        "Designed the relational schema in PostgreSQL using Prisma, modeling users, TOEIC question sets, and attempt/answer history",
+        "Built the AI explanation pipeline so users receive per-question LLM-generated explanations after answering",
+        "Containerized all services with Docker Compose for one-command local setup with environment-based config",
+      ],
+    },
+    {
+      title: "Postfix Outbound Relay – Mail Infrastructure & DevOps",
+      description:
+        "A self-hosted outbound SMTP relay for transactional email. Application services authenticate to the relay which is locked down to only allow known authenticated services, reducing open-relay and spam risks. Containerized with Docker for repeatable deployment.",
+      image: "/placeholder.svg?height=400&width=600",
+      tags: ["Linux", "Docker", "Postfix", "SMTP", "SPF", "DKIM", "DMARC"],
+      demoUrl: "",
+      githubUrl: "https://github.com/Vo-Hoa-Thuan",
+      responsibilities: [
+        "Built a self-hosted outbound SMTP relay where only authenticated, known services can submit mail",
+        "Configured SPF (authorized sending IPs), DKIM (cryptographic message signing), and DMARC policy on the sending domain",
+        "Containerized the relay with Docker for repeatable, version-controlled deployment without manual reconfiguration",
+      ],
+    },
+    {
+      title: "HCM_METRO – Metro Management & Tracking Platform",
+      description:
+        "A full-stack metro management platform built with React.js and Node.js/Express.js, handling route management, tracking simulation, and user authentication via Google OAuth and OTP. Modeled routes, stations, and tracking data in MongoDB with targeted indexing strategies.",
       image: "/metrohcm.png?height=400&width=600",
-      tags: ["React.js", "Node.js", "MongoDB", "TypeScript", "Docker"],
-      demoUrl: "https://example.com",
+      tags: ["React.js", "Node.js", "Express.js", "MongoDB", "TypeScript", "Docker"],
+      demoUrl: "",
       githubUrl: "https://github.com/Vo-Hoa-Thuan/HCM_METRO",
       responsibilities: [
-        "Developed a responsive React.js frontend for an intuitive user experience",
-        "Built a robust Node.js backend to handle business logic, user authentication, and API endpoints",
-        "Designed and optimized a MongoDB database for efficient data storage and retrieval",
-        "Integrated real-time features for metro tracking and schedule updates",
-        "Implemented secure user authentication (Google Sign-In, OTP-based login)",
-        "Containerized the application using Docker for consistent deployment across environments",
-      ],
-    },
-    {
-      title: "FTL Jewelry Management System",
-      description:
-        "A web-based product management system developed with PHP, JavaScript, HTML, and CSS, designed to streamline product, user, and order management.",
-      image: "/FTLjewelry.png?height=400&width=600",
-      tags: ["PHP", "JavaScript", "HTML", "CSS", "MySQL"],
-      demoUrl: "https://example.com",
-      githubUrl: "https://github.com/Vo-Hoa-Thuan/FTL_Jewelry",
-      responsibilities: [
-        "Developed user-friendly interfaces for managing products and orders",
-        "Implemented secure user authentication and data protection mechanisms",
-        "Optimized backend operations using PHP for efficient data processing",
-        "Enhanced frontend interactivity with JavaScript and AJAX",
-        "Managed database operations to ensure data integrity and performance",
-        "Utilized Git for version control and followed best practices in web development",
-      ],
-    },
-    {
-      title: "Room Rental Management System",
-      description:
-        "A full-stack room rental management system comprising a Kotlin-based Android application and a Node.js backend API. The system streamlines tenant management, rental agreements, and payment tracking while ensuring secure data handling and seamless synchronization between the mobile app and backend services.",
-      image: "/Quanlynhatro.png?height=400&width=600",
-      tags: ["Kotlin", "Android", "Node.js", "Express.js", "MongoDB"],
-      demoUrl: "https://example.com",
-      githubUrl: "https://github.com/Vo-Hoa-Thuan/quanlynhatro",
-      responsibilities: [
-        "Developed an intuitive Android application using Kotlin, enhancing user experience for landlords and tenants",
-        "Designed and implemented RESTful API endpoints with Node.js & Express.js to manage room rental data",
-        "Integrated MongoDB for efficient data storage, retrieval, and security",
-        "Implemented authentication and authorization to secure user data and API access",
-        "Ensured seamless synchronization between the mobile app and backend, optimizing data consistency",
-        "Managed CRUD operations for tenants, rental agreements, and payments",
-        "Utilized Git for version control and followed best practices in mobile and backend development",
+        "Built the Node.js/Express.js backend handling route management and tracking simulation via REST endpoints",
+        "Modeled routes, stations, and tracking data as MongoDB collections with targeted indexes for main read patterns",
+        "Implemented Google OAuth for sign-in and OTP-based verification for new sign-ups",
+        "Containerized with Docker for consistent local development and setup across environments",
       ],
     },
   ]
 
   const backendSkills = [
-    { name: "Node.js & Express.js", level: 90 },
-    { name: "PHP", level: 85 },
-    { name: "Java", level: 75 },
-    { name: "RESTful APIs", level: 92 },
-    { name: "MongoDB", level: 88 },
-    { name: "MySQL", level: 85 },
+    { name: "Node.js & NestJS", level: 92 },
+    { name: "FastAPI & Python", level: 82 },
+    { name: "RESTful API Design", level: 93 },
+    { name: "PostgreSQL & Prisma ORM", level: 88 },
+    { name: "MongoDB & Redis", level: 85 },
+    { name: "JWT & OAuth2 Auth", level: 88 },
   ]
 
   const frontendSkills = [
-    { name: "React.js", level: 88 },
-    { name: "JavaScript & TypeScript", level: 90 },
-    { name: "HTML & CSS", level: 92 },
-    { name: "Next.js", level: 80 },
-    { name: "Mobile (Kotlin, Java)", level: 78 },
-    { name: "UI/UX Design", level: 75 },
+    { name: "React.js & Next.js", level: 88 },
+    { name: "TypeScript & JavaScript", level: 92 },
+    { name: "Tailwind CSS", level: 87 },
+    { name: "Zustand & TanStack Query", level: 80 },
+    { name: "Responsive UI Development", level: 88 },
+    { name: "PHP", level: 78 },
   ]
 
   const otherSkills = [
-    "Docker",
-    "Git & GitHub",
-    "Problem Solving",
-    "Team Collaboration",
-    "Self-Learning",
-    "Project Management",
+    "Docker & Docker Compose",
+    "Linux (Ubuntu/CentOS)",
+    "Nginx Reverse Proxy",
+    "GitHub Actions",
+    "AI APIs (OpenAI, Gemini, Claude)",
+    "Postfix / SMTP / Mail Security",
+    "Shell Scripting",
+    "Prompt Engineering",
   ]
 
   return (
@@ -188,13 +183,13 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.2 }}
             >
               <div className="caret transparent inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-4sm font-medium mb-2">
-                Full Stack Developer
+                Full Stack · Platform Engineering · AI-Integrated Systems
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
                 Hi, I'm <span className="text-primary">Vo Hoa Thuan</span>
               </h1>
               <p className="text-xl text-muted-foreground">
-                A passionate Full Stack Developer with expertise in Node.js, React, and Mobile development.
+                Full-Stack Engineer building modern web applications, backend services, and Linux-based infrastructure with AI integration.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
@@ -203,7 +198,7 @@ export default function Home() {
                   </a>
                 </Button>
                 <Button variant="outline" asChild>
-                  <a href="/vo-hoa-thuan-cv.pdf" download>
+                  <a href="/VoHoaThuan_FullStack_Engineer_CV.pdf" download>
                     <Download className="mr-2 h-4 w-4" /> Download CV
                   </a>
                 </Button>
@@ -220,7 +215,7 @@ export default function Home() {
                   <Github className="h-10 w-10" />
                 </motion.a>
                 <motion.a
-                  href="https://www.linkedin.com/in/hoa-thuan-vo-3198b6355/"
+                  href="https://www.linkedin.com/in/thuan-dev2004/"
                   className="text-muted-foreground hover:text-primary transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -228,7 +223,7 @@ export default function Home() {
                   <Linkedin className="h-10 w-10" />
                 </motion.a>
                 <motion.a
-                  href="mailto:vohoathuan.82004@gmail.com"
+                  href="mailto:vohoathuan.devt@gmail.com"
                   className="text-muted-foreground hover:text-primary transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -270,22 +265,20 @@ export default function Home() {
             >
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  I am applying for a{" "}
+                  Full-Stack Engineer with hands-on experience building modern web applications, backend services, and{" "}
                   <span className="text-primary font-medium">
-                    Node.js Intern, Mobile Intern, Frontend, or Backend Developer
+                    Linux-based infrastructure.
                   </span>{" "}
-                  position to leverage my experience in full-stack development and contribute to real-world projects.
-                  Through my involvement in metro management, product management, and room rental systems, I have gained
-                  hands-on experience in React.js, Node.js, Express.js, Nextjs, Docker, MongoDB, and PHP.
+                  Developed AI-integrated systems using OpenAI, Gemini, and Claude APIs while designing scalable backend
+                  architectures with Node.js, NestJS, FastAPI, PostgreSQL, and Docker.
                 </p>
                 <p>
-                  I am eager to enhance my technical skills, work in a professional environment, and collaborate with a
-                  team to develop efficient, scalable applications. My experience in building responsive UIs, designing
-                  backend APIs, and optimizing databases has prepared me to take on challenges and grow as a developer.
+                  Experienced across the full software lifecycle, from React frontend development and API design to
+                  deployment-ready environments, server administration, mail infrastructure, and production incident response.
                 </p>
                 <p>
-                  I am highly motivated to learn, adapt, and contribute to the company's success while continuously
-                  improving my expertise in both frontend and backend technologies.
+                  Interested in building reliable software platforms that combine strong engineering fundamentals with
+                  practical AI capabilities.
                 </p>
               </div>
             </motion.div>
@@ -346,7 +339,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-sm font-medium text-muted-foreground">Phone</h3>
                 </div>
-                <p className="text-xl font-semibold break-all">0867962672</p>
+                <p className="text-xl font-semibold break-all">(+84) 867 962 672</p>
               </motion.div>
               <motion.div
                 className="bg-card rounded-lg p-6 shadow-md border border-border/50 hover:border-primary/50 transition-colors duration-300"
@@ -362,7 +355,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-sm font-medium text-muted-foreground">Email</h3>
                 </div>
-                <p className="text-xl font-semibold break-all">vohoathuan.82004@gmail.com</p>
+                <p className="text-xl font-semibold break-all">vohoathuan.devt@gmail.com</p>
               </motion.div>
             </div>
 
@@ -382,7 +375,7 @@ export default function Home() {
                   <h3 className="text-sm font-medium text-muted-foreground">Location</h3>
                 </div>
                 <p className="text-xl font-semibold">
-                  Huynh Van Nghe Street, Ward 15, Tan Binh District, Ho Chi Minh City
+                  Ho Chi Minh City, Vietnam
                 </p>
               </motion.div>
               <motion.div
@@ -400,9 +393,9 @@ export default function Home() {
                   <h3 className="text-sm font-medium text-muted-foreground">Interests</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Reading books</span>
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Football</span>
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Technology</span>
+                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">AI & Software Engineering</span>
+                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Linux & Platform Infrastructure</span>
+                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Football & Badminton</span>
                 </div>
               </motion.div>
             </div>
@@ -418,12 +411,12 @@ export default function Home() {
                 <SectionTitle title="Education" subtitle="My academic background and qualifications" className="mb-8" />
                 <div className="space-y-6">
                   <TimelineItem
-                    title="HỌC VIỆN KĨ THUẬT MẬT MÃ"
-                    date="2022 - 2026"
+                    title="Academy of Cryptography Techniques (ACT)"
+                    date="2022 - 2026 (Expected)"
                     description={
                       <div className="space-y-2">
                         <p>Majoring in Information Technology</p>
-                        <p>Third year student</p>
+                        <p>Technical working proficiency in English</p>
                         <div className="mt-4 flex items-center">
                           <GraduationCap className="h-5 w-5 text-primary mr-2" />
                           <span className="font-medium">Bachelor of Information Technology</span>
@@ -444,19 +437,21 @@ export default function Home() {
                 />
                 <div className="space-y-6">
                   <TimelineItem
-                    title="Full Stack Developer"
-                    date="2022 - Present"
+                    title="System Administrator & Backend Developer"
+                    date="Jan 2026 - May 2026"
                     description={
                       <div className="space-y-2">
-                        <p>Working on various full-stack projects including:</p>
+                        <p className="font-medium text-primary">Sieu Toc Viet — Ho Chi Minh City, Vietnam</p>
                         <ul className="list-disc pl-5 space-y-1 mt-2">
-                          <li>Metro Management System</li>
-                          <li>Jewelry Management System</li>
-                          <li>Room Rental Management System</li>
+                          <li>Designed and built 10+ Node.js and Python AI automation services integrating OpenAI, Gemini, and Claude APIs</li>
+                          <li>Managed Linux production servers (DirectAdmin + Docker), handling monitoring, patching, and operational support</li>
+                          <li>Investigated and remediated malware-related incidents via process analysis, log review, and system hardening</li>
+                          <li>Operated Postfix relay infrastructure, configured SPF/DKIM/DMARC, and resolved SMTP delivery issues</li>
+                          <li>Built internal automation scripts to streamline data processing and content publishing workflows</li>
                         </ul>
                         <div className="mt-4 flex items-center">
                           <Briefcase className="h-5 w-5 text-primary mr-2" />
-                          <span className="font-medium">Self-directed Projects</span>
+                          <span className="font-medium">Full-time Employment</span>
                         </div>
                       </div>
                     }
@@ -665,7 +660,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <p className="text-muted-foreground">vohoathuan.82004@gmail.com</p>
+                      <p className="text-muted-foreground">vohoathuan.devt@gmail.com</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -674,7 +669,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-muted-foreground">0867962672</p>
+                      <p className="text-muted-foreground">(+84) 867 962 672</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -692,7 +687,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-medium">Location</h4>
-                      <p className="text-muted-foreground">Tan Binh District, Ho Chi Minh City</p>
+                      <p className="text-muted-foreground">Ho Chi Minh City, Vietnam</p>
                     </div>
                   </div>
                 </div>
@@ -799,8 +794,8 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-bold mb-4">Contact</h3>
               <ul className="space-y-2">
-                <li className="text-muted-foreground">Email: vohoathuan.82004@gmail.com</li>
-                <li className="text-muted-foreground">Phone: 0867962672</li>
+                <li className="text-muted-foreground">Email: vohoathuan.devt@gmail.com</li>
+                <li className="text-muted-foreground">Phone: (+84) 867 962 672</li>
               </ul>
             </div>
             <div>
@@ -814,11 +809,11 @@ export default function Home() {
                 >
                   <Github className="h-5 w-5" />
                 </a>
-                <a href="https://www.linkedin.com/in/hoa-thuan-vo-3198b6355/" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="https://www.linkedin.com/in/thuan-dev2004/" className="text-muted-foreground hover:text-primary transition-colors">
                   <Linkedin className="h-5 w-5" />
                 </a>
                 <a
-                  href="mailto:vohoathuan.82004@gmail.com"
+                  href="mailto:vohoathuan.devt@gmail.com"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   <Mail className="h-5 w-5" />

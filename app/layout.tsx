@@ -5,11 +5,11 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Vo Hoa Thuan - Full Stack Developer Portfolio",
+  title: "Vo Hoa Thuan - Full Stack & Platform Engineer Portfolio",
   description:
-    "Personal portfolio website of Vo Hoa Thuan, a Full Stack Developer specializing in Node.js, React, and Mobile development.",
-  keywords: "Vo Hoa Thuan, Full Stack Developer, Node.js, React, Mobile Development, Portfolio, Web Developer",
-    generator: 'v0.dev'
+    "Personal portfolio of Vo Hoa Thuan, a Full Stack Engineer specializing in Node.js, NestJS, React, AI-integrated systems, and Linux infrastructure.",
+  keywords: "Vo Hoa Thuan, Full Stack Engineer, Node.js, NestJS, React, FastAPI, Docker, AI Integration, Platform Engineering, Portfolio",
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({ children }) {
@@ -23,7 +23,5 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-
-
 
 import './globals.css'
